@@ -1,5 +1,5 @@
-const WIDTH = 500;
-const HEIGHT = 300;
+const WIDTH = window.innerWidth - 500;
+const HEIGHT = window.innerHeight - 200;
 
 const audio = document.querySelector("#audio") as HTMLAudioElement;
 audio.addEventListener("play", main);
@@ -50,37 +50,39 @@ function draw(
   // This is where the data array is actually filled with values
   analyser.getByteFrequencyData(dataArray);
 
-  canvasCtx.fillStyle = "rgb(0 0 0)";
+  // Make background
+  const gradient = canvasCtx.createRadialGradient(
+    WIDTH / 2,
+    HEIGHT / 2,
+    HEIGHT / 8,
+    WIDTH / 2,
+    HEIGHT / 2,
+    HEIGHT / 1.5
+  );
+  gradient.addColorStop(0, "#10265B");
+  gradient.addColorStop(1, "#0E0E28");
+  canvasCtx.fillStyle = gradient;
   canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
   for (let i = 0; i < bufferLength; i++) {
     if (dataArray[i] > 250) {
       // it's a BEAT
-      canvasCtx.fillStyle = `rgb(50 50 50)`;
+      canvasCtx.fillStyle = `#F7D902`;
       canvasCtx.beginPath();
       canvasCtx.arc(100, 75, 50, 0, 2 * Math.PI);
+      canvasCtx.shadowBlur = 30;
+      canvasCtx.shadowColor = "#F7D902";
       canvasCtx.fill();
     } else if (dataArray[i] > 220) {
-      canvasCtx.fillStyle = `rgb(50 50 50)`;
+      canvasCtx.fillStyle = `#F7D902`;
       canvasCtx.beginPath();
       canvasCtx.arc(200, 0, 50, 0, 2 * Math.PI);
       canvasCtx.fill();
     } else if (dataArray[i] > 200) {
-      canvasCtx.fillStyle = `rgb(50 50 50)`;
+      canvasCtx.fillStyle = `#F7D902`;
       canvasCtx.beginPath();
       canvasCtx.arc(0, 150, 50, 0, 2 * Math.PI);
       canvasCtx.fill();
     }
-    //  else if (dataArray[i] > 190) {
-    //   canvasCtx.fillStyle = `rgb(50 50 50)`;
-    //   canvasCtx.beginPath();
-    //   canvasCtx.arc(300, 200, 50, 0, 2 * Math.PI);
-    //   canvasCtx.fill();
-    // } else if (dataArray[i] > 180) {
-    //   canvasCtx.fillStyle = `rgb(50 50 50)`;
-    //   canvasCtx.beginPath();
-    //   canvasCtx.arc(500, 200, 50, 0, 2 * Math.PI);
-    //   canvasCtx.fill();
-    // }
   }
 }
