@@ -24,16 +24,15 @@ function main() {
   const source = audioCtx.createMediaStreamSource(
     (audio as any).captureStream()
   );
-
+  // Now the analyser has a mediastream input to analyse so u can grab the frequency data later
   source.connect(analyser);
-  analyser.connect(audioCtx.destination);
 
   analyser.fftSize = 2048;
 
   const bufferLength = analyser.frequencyBinCount;
+  // At this point, data array is a bunch of zeroes
   const dataArray = new Uint8Array(bufferLength);
-  console.log("loaf data array", dataArray);
-  // canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
   draw(canvasCtx, analyser, dataArray, bufferLength);
 }
 
@@ -47,22 +46,41 @@ function draw(
     draw(canvasCtx, analyser, dataArray, bufferLength)
   );
 
+  // each item in the array represents the decibel value for a specific frequency.
+  // This is where the data array is actually filled with values
   analyser.getByteFrequencyData(dataArray);
 
   canvasCtx.fillStyle = "rgb(0 0 0)";
   canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  const barWidth = (WIDTH / bufferLength) * 2.5;
-  let barHeight;
-  let x = 0;
-
   for (let i = 0; i < bufferLength; i++) {
-    barHeight = dataArray[i];
-    console.log("loaf barheight", barHeight);
-
-    canvasCtx.fillStyle = `rgb(${barHeight + 100} 50 50)`;
-    canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
-
-    x += barWidth + 1;
+    if (dataArray[i] > 250) {
+      // it's a BEAT
+      canvasCtx.fillStyle = `rgb(50 50 50)`;
+      canvasCtx.beginPath();
+      canvasCtx.arc(100, 75, 50, 0, 2 * Math.PI);
+      canvasCtx.fill();
+    } else if (dataArray[i] > 220) {
+      canvasCtx.fillStyle = `rgb(50 50 50)`;
+      canvasCtx.beginPath();
+      canvasCtx.arc(200, 0, 50, 0, 2 * Math.PI);
+      canvasCtx.fill();
+    } else if (dataArray[i] > 200) {
+      canvasCtx.fillStyle = `rgb(50 50 50)`;
+      canvasCtx.beginPath();
+      canvasCtx.arc(0, 150, 50, 0, 2 * Math.PI);
+      canvasCtx.fill();
+    }
+    //  else if (dataArray[i] > 190) {
+    //   canvasCtx.fillStyle = `rgb(50 50 50)`;
+    //   canvasCtx.beginPath();
+    //   canvasCtx.arc(300, 200, 50, 0, 2 * Math.PI);
+    //   canvasCtx.fill();
+    // } else if (dataArray[i] > 180) {
+    //   canvasCtx.fillStyle = `rgb(50 50 50)`;
+    //   canvasCtx.beginPath();
+    //   canvasCtx.arc(500, 200, 50, 0, 2 * Math.PI);
+    //   canvasCtx.fill();
+    // }
   }
 }
