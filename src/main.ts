@@ -1,3 +1,5 @@
+import { Firefly } from "./Firefly";
+
 const WIDTH = window.innerWidth - 500;
 const HEIGHT = window.innerHeight - 200;
 
@@ -36,6 +38,11 @@ function main() {
   draw(canvasCtx, analyser, dataArray, bufferLength);
 }
 
+function randomiseNumInRange(floor: number, ceil: number) {
+  const range = ceil - floor + 1;
+  return Math.floor(Math.random() * range) + floor;
+}
+
 function draw(
   canvasCtx: CanvasRenderingContext2D,
   analyser: AnalyserNode,
@@ -50,6 +57,7 @@ function draw(
   // This is where the data array is actually filled with values
   analyser.getByteFrequencyData(dataArray);
 
+  // TODO make sure abckground loads immediately
   // Make background
   const gradient = canvasCtx.createRadialGradient(
     WIDTH / 2,
@@ -64,24 +72,41 @@ function draw(
   canvasCtx.fillStyle = gradient;
   canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
+  const FIREFLY_SIZE = 8;
+
   for (let i = 0; i < bufferLength; i++) {
     if (dataArray[i] > 250) {
-      // it's a BEAT
-      canvasCtx.fillStyle = `#F7D902`;
-      canvasCtx.beginPath();
-      canvasCtx.arc(100, 75, 50, 0, 2 * Math.PI);
-      canvasCtx.shadowBlur = 30;
-      canvasCtx.shadowColor = "#F7D902";
-      canvasCtx.fill();
+      const firefly = new Firefly(500, 400, canvasCtx);
+      firefly.draw();
+      // // it's a BEAT
+      // canvasCtx.fillStyle = `#F7D902`;
+      // canvasCtx.beginPath();
+      // // Needs to be randomised between
+
+      // Math.random();
+      // // 100 -> WIDTH - 100,
+      // // 100 -> HEIGHT - 100
+
+      // // Now randomise it
+      // // fuck :skull:
+
+      // // OK WE WANT TO TRIGGER AN ANIMATION INSTEAD
+      // // maybe randomise
+      // const xPos = randomiseNumInRange(100, WIDTH - 100);
+      // const yPos = randomiseNumInRange(100, HEIGHT - 100);
+      // canvasCtx.arc(xPos, yPos, FIREFLY_SIZE, 0, 2 * Math.PI);
+      // canvasCtx.shadowBlur = 30;
+      // canvasCtx.shadowColor = "#F7D902";
+      // canvasCtx.fill();
     } else if (dataArray[i] > 220) {
       canvasCtx.fillStyle = `#F7D902`;
       canvasCtx.beginPath();
-      canvasCtx.arc(200, 0, 50, 0, 2 * Math.PI);
+      canvasCtx.arc(800, 600, FIREFLY_SIZE, 0, 2 * Math.PI);
       canvasCtx.fill();
     } else if (dataArray[i] > 200) {
       canvasCtx.fillStyle = `#F7D902`;
       canvasCtx.beginPath();
-      canvasCtx.arc(0, 150, 50, 0, 2 * Math.PI);
+      canvasCtx.arc(300, 100, FIREFLY_SIZE, 0, 2 * Math.PI);
       canvasCtx.fill();
     }
   }
