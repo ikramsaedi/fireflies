@@ -3,12 +3,19 @@ export class Firefly {
   yPos: number;
   canvasCtx: CanvasRenderingContext2D;
   size: number;
+  fillStyle: string;
 
-  constructor(xPos: number, yPos: number, canvasCtx: CanvasRenderingContext2D) {
+  constructor(
+    xPos: number,
+    yPos: number,
+    canvasCtx: CanvasRenderingContext2D,
+    fillStyle?: string
+  ) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.canvasCtx = canvasCtx;
     this.size = 8;
+    this.fillStyle = fillStyle ?? "#F7D902";
   }
 
   draw() {

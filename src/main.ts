@@ -53,12 +53,30 @@ function draw(
     draw(canvasCtx, analyser, dataArray, bufferLength)
   );
 
+  drawBackground(canvasCtx);
+
   // each item in the array represents the decibel value for a specific frequency.
   // This is where the data array is actually filled with values
   analyser.getByteFrequencyData(dataArray);
 
-  // TODO make sure abckground loads immediately
-  // Make background
+  // TODO get them to display in random places
+  for (let i = 0; i < bufferLength; i++) {
+    if (dataArray[i] > 250) {
+      const firefly = new Firefly(500, 400, canvasCtx);
+      firefly.draw();
+    } else if (dataArray[i] > 220) {
+      const firefly = new Firefly(800, 600, canvasCtx);
+      firefly.draw();
+    } else if (dataArray[i] > 200) {
+      const firefly = new Firefly(300, 100, canvasCtx);
+      firefly.draw();
+    }
+  }
+}
+
+// TODO make sure abckground loads immediately
+// Make background
+function drawBackground(canvasCtx: CanvasRenderingContext2D) {
   const gradient = canvasCtx.createRadialGradient(
     WIDTH / 2,
     HEIGHT / 2,
@@ -71,43 +89,4 @@ function draw(
   gradient.addColorStop(1, "#0E0E28");
   canvasCtx.fillStyle = gradient;
   canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-  const FIREFLY_SIZE = 8;
-
-  for (let i = 0; i < bufferLength; i++) {
-    if (dataArray[i] > 250) {
-      const firefly = new Firefly(500, 400, canvasCtx);
-      firefly.draw();
-      // // it's a BEAT
-      // canvasCtx.fillStyle = `#F7D902`;
-      // canvasCtx.beginPath();
-      // // Needs to be randomised between
-
-      // Math.random();
-      // // 100 -> WIDTH - 100,
-      // // 100 -> HEIGHT - 100
-
-      // // Now randomise it
-      // // fuck :skull:
-
-      // // OK WE WANT TO TRIGGER AN ANIMATION INSTEAD
-      // // maybe randomise
-      // const xPos = randomiseNumInRange(100, WIDTH - 100);
-      // const yPos = randomiseNumInRange(100, HEIGHT - 100);
-      // canvasCtx.arc(xPos, yPos, FIREFLY_SIZE, 0, 2 * Math.PI);
-      // canvasCtx.shadowBlur = 30;
-      // canvasCtx.shadowColor = "#F7D902";
-      // canvasCtx.fill();
-    } else if (dataArray[i] > 220) {
-      canvasCtx.fillStyle = `#F7D902`;
-      canvasCtx.beginPath();
-      canvasCtx.arc(800, 600, FIREFLY_SIZE, 0, 2 * Math.PI);
-      canvasCtx.fill();
-    } else if (dataArray[i] > 200) {
-      canvasCtx.fillStyle = `#F7D902`;
-      canvasCtx.beginPath();
-      canvasCtx.arc(300, 100, FIREFLY_SIZE, 0, 2 * Math.PI);
-      canvasCtx.fill();
-    }
-  }
 }
