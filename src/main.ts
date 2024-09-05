@@ -5,6 +5,7 @@ const HEIGHT = window.innerHeight - 200;
 
 const audio = document.querySelector("#audio") as HTMLAudioElement;
 audio.addEventListener("play", main);
+const fireflies: Firefly[] = [];
 function main() {
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
@@ -35,6 +36,13 @@ function main() {
   // At this point, data array is a bunch of zeroes
   const dataArray = new Uint8Array(bufferLength);
 
+  for (let i = 0; i < 5; i++) {
+    const xPos = randomiseNumInRange(100, WIDTH - 100);
+    const yPos = randomiseNumInRange(100, HEIGHT - 100);
+
+    fireflies.push(new Firefly(xPos, yPos, canvasCtx));
+  }
+
   draw(canvasCtx, analyser, dataArray, bufferLength);
 }
 
@@ -62,14 +70,11 @@ function draw(
   // TODO get them to display in random places
   for (let i = 0; i < bufferLength; i++) {
     if (dataArray[i] > 250) {
-      const firefly = new Firefly(500, 400, canvasCtx);
-      firefly.draw();
+      fireflies[0].draw();
     } else if (dataArray[i] > 220) {
-      const firefly = new Firefly(800, 600, canvasCtx);
-      firefly.draw();
+      fireflies[1].draw();
     } else if (dataArray[i] > 200) {
-      const firefly = new Firefly(300, 100, canvasCtx);
-      firefly.draw();
+      fireflies[2].draw();
     }
   }
 }
