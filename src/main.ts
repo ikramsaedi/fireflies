@@ -36,17 +36,18 @@ function main() {
   // At this point, data array is a bunch of zeroes
   const dataArray = new Uint8Array(bufferLength);
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 15; i++) {
     const xPos = randomiseNumInRange(100, WIDTH - 100);
     const yPos = randomiseNumInRange(100, HEIGHT - 100);
 
     fireflies.push(new Firefly(xPos, yPos, canvasCtx));
   }
 
+  console.log("loaf fireflies", fireflies);
   draw(canvasCtx, analyser, dataArray, bufferLength);
 }
 
-function randomiseNumInRange(floor: number, ceil: number) {
+export function randomiseNumInRange(floor: number, ceil: number) {
   const range = ceil - floor + 1;
   return Math.floor(Math.random() * range) + floor;
 }
@@ -67,20 +68,26 @@ function draw(
   // This is where the data array is actually filled with values
   analyser.getByteFrequencyData(dataArray);
 
-  // TODO get them to display in random places
   for (let i = 0; i < bufferLength; i++) {
-    if (dataArray[i] > 250) {
+    // TODO stop hard coding these values when your brain wakes up
+    if (dataArray[i] > 220) {
       fireflies[0].update();
-    } else if (dataArray[i] > 220) {
       fireflies[1].update();
-    } else if (dataArray[i] > 200) {
       fireflies[2].update();
+      fireflies[3].update();
+      fireflies[4].update();
+      fireflies[5].update();
+    } else if (dataArray[i] > 170) {
+      fireflies[6].update();
+      fireflies[7].update();
+      fireflies[8].update();
+      fireflies[9].update();
+      fireflies[10].update();
     }
   }
 }
 
 // TODO make sure abckground loads immediately
-// Make background
 function drawBackground(canvasCtx: CanvasRenderingContext2D) {
   const gradient = canvasCtx.createRadialGradient(
     WIDTH / 2,
