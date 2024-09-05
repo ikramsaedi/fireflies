@@ -1,7 +1,7 @@
 import { Firefly } from "./Firefly";
 
-const WIDTH = window.innerWidth - 500;
-const HEIGHT = window.innerHeight - 200;
+export const WIDTH = window.innerWidth - 500;
+export const HEIGHT = window.innerHeight - 200;
 
 const audio = document.querySelector("#audio") as HTMLAudioElement;
 audio.addEventListener("play", main);
@@ -36,7 +36,7 @@ function main() {
   // At this point, data array is a bunch of zeroes
   const dataArray = new Uint8Array(bufferLength);
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 4; i++) {
     const xPos = randomiseNumInRange(100, WIDTH - 100);
     const yPos = randomiseNumInRange(100, HEIGHT - 100);
 
@@ -70,11 +70,11 @@ function draw(
   // TODO get them to display in random places
   for (let i = 0; i < bufferLength; i++) {
     if (dataArray[i] > 250) {
-      fireflies[0].draw();
+      fireflies[0].update();
     } else if (dataArray[i] > 220) {
-      fireflies[1].draw();
+      fireflies[1].update();
     } else if (dataArray[i] > 200) {
-      fireflies[2].draw();
+      fireflies[2].update();
     }
   }
 }
