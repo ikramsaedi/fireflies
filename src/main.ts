@@ -6,8 +6,8 @@ export const WIDTH = window.innerWidth - 500;
 export const HEIGHT = window.innerHeight - 200;
 
 // These are just magic numbers that I found work well with this song
-const LOUD_BEAT_FREQ = 220;
-const QUIET_BEAT_FREQ = 160;
+const LOUD_BEAT_AMPLITUDE = 220;
+const QUIET_BEAT_AMPLITUDE = 160;
 
 const audio = document.querySelector("#audio") as HTMLAudioElement;
 audio.addEventListener("play", main);
@@ -42,6 +42,8 @@ function main() {
 
     // TODO actually understand what this means
     // half of the size of the FFT (Fast Fourier Transform) window
+    // The FFT algorithm converts audio data into freq (x) by amplitude (y) data
+    // the whole frequency range has been divided into the binCount number of bins
     const bufferLength = analyser.frequencyBinCount;
 
     // At this point, data array is a bunch of zeroes
@@ -77,21 +79,25 @@ function draw(
 
     // each item in the array represents the decibel value for a specific frequency.
     // This is where the data array is actually filled with values
+    // each bin takes up a byte (can have val between 0-255)
+    // this is a list of amplitudes which are indexed by frequency bin
     analyser.getByteFrequencyData(dataArray);
 
     const halfFirefliesIndex = Math.floor(fireflies.length / 2);
-    // For each decibel frequency value in the data array that is higher than my arbitrary threshold of 170
+    // For each decibel amplitude value in the data array that is higher than my arbitrary threshold of 170
     // redraw the fireflies. this way they will move with the music
-    // The louder the music, the higher the frequency (and also the more decibel values in a row that are higher than the threshold)
+    // The louder the music, the higher the amplitude (and also the more decibel values in a row that are higher than the threshold)
     // Therefore the fireflies will move more quickly when the music is louder as they are redrawn more frequently
+
+    // going from lowest freq to highest freq
     for (let i = 0; i < bufferLength; i++) {
-        if (dataArray[i] > LOUD_BEAT_FREQ) {
-            for (let i = 0; i < halfFirefliesIndex; i++) {
-                fireflies[i].update();
+        if (dataArray[i] > LOUD_BEAT_AMPLITUDE) {
+            for (let j = 0; j < halfFirefliesIndex; j++) {
+                fireflies[j].update();
             }
-        } else if (dataArray[i] > QUIET_BEAT_FREQ) {
-            for (let i = halfFirefliesIndex; i < fireflies.length; i++) {
-                fireflies[i].update();
+        } else if (dataArray[i] > QUIET_BEAT_AMPLITUDE) {
+            for (let j = halfFirefliesIndex; j < fireflies.length; j++) {
+                fireflies[j].update();
             }
         }
     }
