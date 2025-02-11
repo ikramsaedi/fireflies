@@ -3,8 +3,10 @@ import { drawBackground } from "./drawBackground";
 import { randomiseNumInRange } from "./randomiseNumInRange";
 import firefliesAudio from "./assets/owl_city-fireflies.mp3";
 
+// TODO be able to actually resize the canvas
 export const WIDTH = window.innerWidth - 500;
-export const HEIGHT = window.innerHeight - 200;
+export const HEIGHT = window.innerHeight;
+const numFireflies = 50;
 
 // These are just magic numbers that I found work well with this song
 const LOUD_BEAT_AMPLITUDE = 220;
@@ -14,7 +16,6 @@ const audio = document.querySelector("#audio") as HTMLAudioElement;
 audio.src = firefliesAudio;
 audio.addEventListener("play", main);
 
-const fireflies: Firefly[] = [];
 function main() {
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
@@ -53,30 +54,36 @@ function main() {
   // the byte frequency data method only accepts unsigned 8 bit int arrays
   const dataArray = new Uint8Array(bufferLength);
 
-  generateFireflies(canvasCtx);
-  draw(canvasCtx, analyser, dataArray, bufferLength);
+  const fireflies = generateFireflies(canvasCtx, canvas.width, canvas.height);
+  draw(canvasCtx, analyser, dataArray, bufferLength, fireflies);
 }
 
-function generateFireflies(canvasCtx: CanvasRenderingContext2D) {
-  for (let i = 0; i < 15; i++) {
-    const xPos = randomiseNumInRange(100, WIDTH - 100);
-    const yPos = randomiseNumInRange(100, HEIGHT - 100);
+function generateFireflies(
+  canvasCtx: CanvasRenderingContext2D,
+  width: number,
+  height: number
+): Firefly[] {
+  const fireflies = [];
+  for (let i = 0; i < numFireflies; i++) {
+    const xPos = randomiseNumInRange(100, width - 100);
+    const yPos = randomiseNumInRange(100, height - 100);
 
     fireflies.push(new Firefly(xPos, yPos, canvasCtx));
   }
+  return fireflies;
 }
 
 function draw(
   canvasCtx: CanvasRenderingContext2D,
   analyser: AnalyserNode,
   dataArray: Uint8Array,
-  bufferLength: number
+  bufferLength: number,
+  fireflies: Firefly[]
 ) {
   requestAnimationFrame(() =>
-    draw(canvasCtx, analyser, dataArray, bufferLength)
+    draw(canvasCtx, analyser, dataArray, bufferLength, fireflies)
   );
 
-  // TODO make sure background loads immediately
   drawBackground(canvasCtx);
 
   // each item in the array represents the decibel value for a specific frequency.

@@ -7,7 +7,7 @@ export class Firefly {
 
   fillStyle: string = "#F7D902";
   radius: number = 5;
-  speed: number = 0.5;
+  speed: number = 0.7;
   dx: number = Math.random() < 0.5 ? -this.speed : this.speed;
   dy: number = Math.random() < 0.5 ? -this.speed : this.speed;
 

@@ -1,3 +1,15 @@
+html {
+    background: #0E0E28;
+}
+
 audio {
     display: block;
+    width: 100%;
+    /* HACK: This is to force the audio controls to display in dark mode */
+    filter: invert(1) hue-rotate(180deg);
+}
+
+#canvas-wrapper {
+    display: flex;
+    justify-content: center;
 }
